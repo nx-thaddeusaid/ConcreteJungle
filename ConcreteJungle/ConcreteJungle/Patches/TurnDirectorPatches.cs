@@ -14,7 +14,7 @@ namespace ConcreteJungle.Patches
         {
             if (!__runOriginal) return;
 
-            if (!ModState.ProcessAmbushes) 
+            if (!ModState.ProcessAmbushes)
             {
                 Mod.Log.Info?.Write("Ambushes disabled by configuration, skipping.");
                 return;

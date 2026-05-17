@@ -1,0 +1,14 @@
+#!/bin/sh
+set -e
+
+# Check formatting on staged changes
+if git diff --cached --name-only | grep -q "ConcreteJungle/ConcreteJungle/"; then
+    echo "Checking whitespace: ConcreteJungle"
+    dotnet format whitespace --verify-no-changes ConcreteJungle/ConcreteJungle/ConcreteJungle.csproj
+fi
+
+# Validate staged JSON files
+if git diff --cached --name-only | grep -q "\.json$"; then
+    echo "Validating JSON..."
+    python .github/scripts/validate_json.py
+fi

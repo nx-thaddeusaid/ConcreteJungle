@@ -198,7 +198,7 @@ namespace ConcreteJungle.Helper
             // Following the same logic as MapMetaData.GetLerpedHeightAt
             Vector3 vector = new Vector3((float)MapMetaDataExporter.cellSize * 0.5f, 0f, (float)MapMetaDataExporter.cellSize * 0.5f);
             Point index = ModState.Combat.MapMetaData.GetIndex(worldPos - vector);
-            
+
             // Clamp indices to valid bounds (same as GetLerpedHeightAt)
             if (index.Z < 0)
             {
@@ -237,9 +237,9 @@ namespace ConcreteJungle.Helper
             float t2 = (worldPos.z - worldPos2.z) / (float)MapMetaDataExporter.cellSize;
 
             // Perform bilinear interpolation (same as GetLerpedHeightAt)
-            float a = Mathf.Lerp(terrainOnly ? mapTerrainDataCell.terrainHeight : mapTerrainDataCell.cachedHeight, 
+            float a = Mathf.Lerp(terrainOnly ? mapTerrainDataCell.terrainHeight : mapTerrainDataCell.cachedHeight,
                                 terrainOnly ? mapTerrainDataCell2.terrainHeight : mapTerrainDataCell2.cachedHeight, t);
-            float b = Mathf.Lerp(terrainOnly ? mapTerrainDataCell3.terrainHeight : mapTerrainDataCell3.cachedHeight, 
+            float b = Mathf.Lerp(terrainOnly ? mapTerrainDataCell3.terrainHeight : mapTerrainDataCell3.cachedHeight,
                                 terrainOnly ? mapTerrainDataCell4.terrainHeight : mapTerrainDataCell4.cachedHeight, t);
             float finalHeight = Mathf.Lerp(a, b, t2);
 

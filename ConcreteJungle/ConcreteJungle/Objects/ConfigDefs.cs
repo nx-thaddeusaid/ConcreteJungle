@@ -14,10 +14,10 @@ namespace ConcreteJungle
         public int EnableOnRound = 3;
 
         public string[] BlacklistedContracts = { };
-        public List<string> BlacklistedFactionIds= new List<string>();
+        public List<string> BlacklistedFactionIds = new List<string>();
         [JsonIgnore]
         public List<FactionValue> BlacklistedFactions = new List<FactionValue>();
-        
+
         // How far from the trigger origin should we search for suitable buildings
         public float SearchRadius = 250.0f;
 

@@ -25,7 +25,7 @@
             if (!__runOriginal) return;
 
             Turret turret = __instance as Turret;
-            if (turret != null && 
+            if (turret != null &&
                 ModState.AmbushTurretGUIDtoBuilding.ContainsKey(__instance.GUID) &&
                 ModState.AmbushTurretGUIDtoBuilding[__instance.GUID].GUID != ModState.KillingLinkedUnitsSource)
             {
