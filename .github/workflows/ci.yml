@@ -1,0 +1,51 @@
+name: CI
+
+on:
+  push:
+  workflow_dispatch:
+
+jobs:
+  validate-json:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Validate JSON files
+        run: python .github/scripts/validate_json.py
+
+  build:
+    uses: BattletechModders/ModTek/.github/workflows/mod-builder.yml@master
+    with:
+      checkout-directory: 'BATTLETECH/Mods/Core/ConcreteJungle'
+      build-script: |
+        MODS="$BATTLETECH_DIR/Mods"
+
+        # IRBTModUtils has public releases
+        curl -fsSL -o IRBTModUtils.zip \
+          https://github.com/BattletechModders/IRBTModUtils/releases/download/latest/IRBTModUtils.zip \
+          && (cd "$MODS" && unzip -q -o "$OLDPWD/IRBTModUtils.zip") \
+          || echo "WARN: IRBTModUtils download failed"
+
+        # CustomAmmoCategories ships inside RogueTech; sparse-checkout just that directory
+        git clone --depth 1 --filter=blob:none --sparse \
+          https://github.com/BattletechModders/RogueTech.git /tmp/rt-sparse
+        git -C /tmp/rt-sparse sparse-checkout set Core/CustomAmmoCategories
+        mkdir -p "$MODS/Core"
+        cp -r /tmp/rt-sparse/Core/CustomAmmoCategories "$MODS/Core/"
+
+        (
+          cd ConcreteJungle
+          dotnet build --configuration Release -p:BattleTechGameDir="$BATTLETECH_DIR/"
+        )
+
+        mkdir -p "$DIST_DIR/ConcreteJungle"
+        cp ConcreteJungle/ConcreteJungle/bin/Release/net472/ConcreteJungle.dll "$DIST_DIR/ConcreteJungle/"
+        cp modAssets/mod.json "$DIST_DIR/ConcreteJungle/"
+        cp -r modAssets/weapon "$DIST_DIR/ConcreteJungle/"
+        7z a -tzip -mx9 "$DIST_DIR/ConcreteJungle.zip" "$DIST_DIR/ConcreteJungle"
+      release-notes: |
+        Requires ModTek and IRBTModUtils to be up-to-date.
+        ConcreteJungle.zip contains the mod.
+    secrets: inherit
